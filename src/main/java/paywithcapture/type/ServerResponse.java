@@ -45,4 +45,8 @@ public class ServerResponse {
 		return response.getStatus();
 	}
 	
+	public HttpResponse<String> getResponseObject() {
+		return this.response;
+	}
+	
 }
