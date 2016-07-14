@@ -43,6 +43,8 @@ public class ServerRequestBuilder {
 	private final String baseUrl;
 	private String path;
 	
+	private String accessToken;
+	
 //	private Header[] cookies;
 	
 	private ServerResponse serverResponse;
@@ -58,16 +60,17 @@ public class ServerRequestBuilder {
 		baseUrl = url;
 	}
 	
+	public ServerRequestBuilder addAccessToken(String token) {
+		this.accessToken = token;
+		return this;
+	}
+	
 	/*
 	 * This is responsible for adding headers to the request
 	 * after the request is set to either GetMethod or PostMethod
 	 */
-	private void setRequestHeaders() {
-		if (headers != null) {
-			for (String headerKey: headers.keySet()) {
-				request.header(headerKey, headers.get(headerKey));
-			}
-		}
+	private void setAccessToken() {
+		request.header("Authorization", "Bearer " + this.accessToken);
 	}
 	
 	/*
@@ -220,7 +223,7 @@ public class ServerRequestBuilder {
 		logger.info("Post body sent: " + postBody.toString());
 		String absoluteUrl = new URL(new URL(baseUrl), path).toString();
 		prepareRequest("post", absoluteUrl);
-		setRequestHeaders();
+		setAccessToken();
 		setPostRequestData();
 		setPostRequestContentTypeHeader();
 		sendRequest();
@@ -233,7 +236,7 @@ public class ServerRequestBuilder {
 	public ServerResponse makeGetRequest(String path) throws MalformedURLException {
 		String absoluteUrl = new URL(new URL(baseUrl), path).toString();
 		prepareRequest("get", absoluteUrl);
-		setRequestHeaders();
+		setAccessToken();
 		setRequestParameters();
 		sendRequest();
 		return getResponse();

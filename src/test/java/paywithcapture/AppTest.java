@@ -1,13 +1,17 @@
 package paywithcapture;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import paywithcapture.builder.PaymentParamsBuilder;
 import paywithcapture.builder.ServerRequestBuilder;
+import paywithcapture.service.AccountPayment;
 import paywithcapture.service.Authentication;
 import paywithcapture.type.ServerResponse;
 
@@ -65,5 +69,23 @@ public class AppTest
     	this.assertNotNull(auth.getRefreshToken());
     	this.assertFalse(auth.getExpiresIn() == 0);
     	logger.info("AccessToken returned from Authentication is" + auth.getAccessToken());
+    }
+    
+    
+    /*
+     * test account payment
+     */
+    public void testAccountPayment() {
+    	PaymentParamsBuilder params = new PaymentParamsBuilder()
+    									.addAmount(new BigDecimal("1000"))
+    									.addAccountNumber("0690000032")
+    									.addDescription("Ridwan testing java lib")
+    									.addMerchantId("577e5fe42989c31100b26f13")
+    									.addTransactionId(String.valueOf(System.currentTimeMillis()));
+    	AccountPayment client = new AccountPayment("577e5fe42989c31100b26f14", 
+    			"diHopa8yFNDWofRNJIeREDmAV3HhL7bwr4umhlhPS0CgqIiOylA6Y9obfsV9VsbWBDuMUKE7MvVpIrtip4oX8zmG21I4QI1rhwjx", 
+    			"staging");
+    	JSONObject response = client.createPayment(params);
+    	logger.info("JSONObject response" + response);
     }
 }

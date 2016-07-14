@@ -18,5 +18,7 @@ public class Values {
 	
 	public static final String AUTHENTICATION_PATH = "/oauth/token";
 	
+	public static final String PAYMENT_PATH = "/orders/oneOffPayment";
+	
 	
 }
