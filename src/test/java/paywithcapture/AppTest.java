@@ -13,6 +13,7 @@ import paywithcapture.builder.PaymentParamsBuilder;
 import paywithcapture.builder.ServerRequestBuilder;
 import paywithcapture.service.AccountPayment;
 import paywithcapture.service.Authentication;
+import paywithcapture.service.CardPayment;
 import paywithcapture.type.ServerResponse;
 
 /**
@@ -60,32 +61,50 @@ public class AppTest
      * test that the response from the server
      * during authentication is valid
      */
-    public void testAuthenticationServiceOk() {
-    	Authentication.Builder builder = new Authentication.Builder()
-    			.addClientId("577e5fe42989c31100b26f14")
-    			.addClientSecret("diHopa8yFNDWofRNJIeREDmAV3HhL7bwr4umhlhPS0CgqIiOylA6Y9obfsV9VsbWBDuMUKE7MvVpIrtip4oX8zmG21I4QI1rhwjx");
-    	Authentication auth = new Authentication(builder).run();
-    	this.assertNotNull(auth.getAccessToken());
-    	this.assertNotNull(auth.getRefreshToken());
-    	this.assertFalse(auth.getExpiresIn() == 0);
-    	logger.info("AccessToken returned from Authentication is" + auth.getAccessToken());
-    }
+//    public void testAuthenticationServiceOk() {
+//    	Authentication.Builder builder = new Authentication.Builder()
+//    			.addClientId("577e5fe42989c31100b26f14")
+//    			.addClientSecret("diHopa8yFNDWofRNJIeREDmAV3HhL7bwr4umhlhPS0CgqIiOylA6Y9obfsV9VsbWBDuMUKE7MvVpIrtip4oX8zmG21I4QI1rhwjx");
+//    	Authentication auth = new Authentication(builder).run();
+//    	this.assertNotNull(auth.getAccessToken());
+//    	this.assertNotNull(auth.getRefreshToken());
+//    	this.assertFalse(auth.getExpiresIn() == 0);
+//    	logger.info("AccessToken returned from Authentication is" + auth.getAccessToken());
+//    }
     
     
     /*
      * test account payment
      */
-    public void testAccountPayment() {
+//    public void testAccountPayment() {
+//    	PaymentParamsBuilder params = new PaymentParamsBuilder()
+//    									.addAmount(new BigDecimal("1000"))
+//    									.addAccountNumber("0690000032")
+//    									.addDescription("Ridwan testing java lib")
+//    									.addMerchantId("577e5fe42989c31100b26f13")
+//    									.addTransactionId(String.valueOf(System.currentTimeMillis()));
+//    	AccountPayment client = new AccountPayment("577e5fe42989c31100b26f14", 
+//    			"diHopa8yFNDWofRNJIeREDmAV3HhL7bwr4umhlhPS0CgqIiOylA6Y9obfsV9VsbWBDuMUKE7MvVpIrtip4oX8zmG21I4QI1rhwjx", 
+//    			"staging");
+//    	JSONObject response = client.createPayment(params);
+//    	this.assertEquals("success", response.get("status"));
+//    	logger.info("JSONObject response" + response);
+//    }
+    
+    public void testCardPayment() {
     	PaymentParamsBuilder params = new PaymentParamsBuilder()
-    									.addAmount(new BigDecimal("1000"))
-    									.addAccountNumber("0690000032")
-    									.addDescription("Ridwan testing java lib")
-    									.addMerchantId("577e5fe42989c31100b26f13")
-    									.addTransactionId(String.valueOf(System.currentTimeMillis()));
-    	AccountPayment client = new AccountPayment("577e5fe42989c31100b26f14", 
-    			"diHopa8yFNDWofRNJIeREDmAV3HhL7bwr4umhlhPS0CgqIiOylA6Y9obfsV9VsbWBDuMUKE7MvVpIrtip4oX8zmG21I4QI1rhwjx", 
-    			"staging");
-    	JSONObject response = client.createPayment(params);
-    	logger.info("JSONObject response" + response);
+    										.addCardNo("5061020000000000094")
+    										.addAmount(new BigDecimal("1000"))
+    										.addDescription("Testing card payment in java")
+    										.addExpMonth("01")
+    										.addExpYear("2018")
+    										.addMerchantId("577e5fe42989c31100b26f13")
+    										.addTransactionId(String.valueOf(System.currentTimeMillis()))
+    										.addPin("1111")
+    										.addCvv("350");
+    	CardPayment cardClient = new CardPayment("577e5fe42989c31100b26f14", "diHopa8yFNDWofRNJIeREDmAV3HhL7bwr4umhlhPS0CgqIiOylA6Y9obfsV9VsbWBDuMUKE7MvVpIrtip4oX8zmG21I4QI1rhwjx", "staging");
+    	JSONObject resp = cardClient.createPayment(params);
+    	this.assertEquals("success", resp.get("status"));
+    	logger.info("Response from card payment server: " +resp);
     }
 }
